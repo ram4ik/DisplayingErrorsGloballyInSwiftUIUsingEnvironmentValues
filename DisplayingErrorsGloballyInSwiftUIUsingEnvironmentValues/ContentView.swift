@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var errorWrapper: ErrorWrapper?
+    @Environment(\.showError) private var showError
     
     private enum SampleError: Error {
         case operationFailed
@@ -21,11 +21,7 @@ struct ContentView: View {
                 do {
                     throw SampleError.operationFailed
                 } catch {
-                    errorWrapper = ErrorWrapper(error: error, guidance: "Please try again.")
-                }
-            }.sheet(item: $errorWrapper) { errorWrapper in
-                VStack {
-                    ErrorView(errorWrapper: errorWrapper)
+                    showError(error, "Please try again!")
                 }
             }
         }
@@ -35,6 +31,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContainerContentView()
     }
 }
