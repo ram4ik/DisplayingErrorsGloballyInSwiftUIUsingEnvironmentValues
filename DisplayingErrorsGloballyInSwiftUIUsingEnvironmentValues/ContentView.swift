@@ -8,12 +8,26 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var errorWrapper: ErrorWrapper?
+    
+    private enum SampleError: Error {
+        case operationFailed
+    }
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            Button("Throws Error") {
+                do {
+                    throw SampleError.operationFailed
+                } catch {
+                    errorWrapper = ErrorWrapper(error: error, guidance: "Please try again.")
+                }
+            }.sheet(item: $errorWrapper) { errorWrapper in
+                VStack {
+                    ErrorView(errorWrapper: errorWrapper)
+                }
+            }
         }
         .padding()
     }
